@@ -2,6 +2,7 @@ let store = {
     user: { name: "Student" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    currentView: ''
 }
 
 // add our markup to the page
@@ -19,10 +20,13 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+    let { rovers, apod, currentView } = state
 
     return `
-        <header> <h1>Mars Dashboard</h1></header>
+        <header>
+          <h1>Mars Dashboard</h1>
+          ${Dropdown(rovers,currentView)}
+        </header>
         <main>
             ${Greeting(store.user.name)}
             <section>
@@ -41,7 +45,7 @@ window.addEventListener('load', () => {
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
+// Pure function that renders conditional information
 const Greeting = (name) => {
     if (name) {
         return `
@@ -54,15 +58,29 @@ const Greeting = (name) => {
     `
 }
 
+const Dropdown = (rovers, currentView) => {
+  return `
+    <select name="views" id="views" onchange="updateCurrentView(this.value)">
+      <option value="apod">Picture of the Day</option>
+      ${rovers.map(rover => `<option 
+                                value="${rover.toLowerCase()}" 
+                                ${currentView===rover.toLowerCase() ? 'selected' : ''}
+                                >${rover}</option>`)}
+    </select>
+  `
+}
+
+const updateCurrentView = (option) => {
+  updateStore(store, { currentView: option })
+}
+
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
 
     // If image does not already exist, or it is not from today -- request it again
     const today = new Date()
     const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
 
-    console.log(photodate.getDate() === today.getDate());
     if (!apod || apod.date === today.getDate() ) {
         getImageOfTheDay(store)
     }
@@ -86,13 +104,11 @@ const ImageOfTheDay = (apod) => {
 
 // ------------------------------------------------------  API CALLS
 
-// Example API call
+// Get image of the day
 const getImageOfTheDay = (state) => {
     let { apod } = state
 
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
-
-    return data
 }
