@@ -2,7 +2,8 @@ let store = {
     user: { name: "Student" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-    currentView: 'apod'
+    currentView: 'apod',
+    selectedRover: {}
 }
 
 // add our markup to the page
@@ -20,8 +21,7 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod, currentView } = state
-    console.log(currentView);
+    let { rovers, apod, currentView, selectedRover } = state
 
     return `
         <header>
@@ -32,7 +32,7 @@ const App = (state) => {
             ${Greeting(store.user.name)}
             <section>
                 ${currentView==='apod' && ImageOfTheDay(apod)}
-                ${rovers.includes(capitalize(currentView)) && RoverView(currentView)}
+                ${rovers.includes(capitalize(currentView)) && RoverView(currentView, selectedRover)}
             </section>
         </main>
         <footer><a href='https://www.freepik.com/photos/background'>Background photo by kjpargeter</a></footer>
@@ -105,11 +105,24 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const RoverView = (rover) => {
-  console.log(rover);
+const RoverView = (rover, selectedRover) => {
+  if(!selectedRover.manifest || selectedRover.manifest.name!=capitalize(rover)) {
+    getRoverData(rover)
+  }
+
   return `
-    <h3>${rover}</h3>
-  `
+    <div class="rover-view">
+      <h3>${capitalize(rover)}</h3>
+      <ul>
+        <li>Launch Date: ${selectedRover.manifest.launch_date}</li>
+        <li>Landing Data: ${selectedRover.manifest.landing_date}</li>
+        <li>Mission status: ${selectedRover.manifest.status}</li>
+        <li>Latest Martian sol: ${selectedRover.manifest.max_sol}</li>
+        <li>Latest Earth date: ${selectedRover.manifest.max_date}</li>
+        <li>Total Photos Taken: ${selectedRover.manifest.total_photos}</li>
+      </ul>
+    </div>
+    `
 }
 
 // ------------------------------------------------------  HELPERS
@@ -125,4 +138,13 @@ const getImageOfTheDay = (state) => {
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
+}
+
+const getRoverData = (rover) => {
+  fetch(`http://localhost:3000/rover-mission?rover=${rover}`)
+      .then(res => res.json())
+      .then(data => {
+        updateStore(store, { selectedRover: { manifest: data }})
+        console.log(store)
+      })
 }
