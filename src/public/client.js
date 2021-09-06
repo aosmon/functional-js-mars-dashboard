@@ -2,7 +2,7 @@ let store = {
     user: { name: "Student" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-    currentView: ''
+    currentView: 'apod'
 }
 
 // add our markup to the page
@@ -21,6 +21,7 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
     let { rovers, apod, currentView } = state
+    console.log(currentView);
 
     return `
         <header>
@@ -30,8 +31,8 @@ const App = (state) => {
         <main>
             ${Greeting(store.user.name)}
             <section>
-                <h3>Picture of the Day</h3>
-                ${ImageOfTheDay(apod)}
+                ${currentView==='apod' && ImageOfTheDay(apod)}
+                ${rovers.includes(capitalize(currentView)) && RoverView(currentView)}
             </section>
         </main>
         <footer><a href='https://www.freepik.com/photos/background'>Background photo by kjpargeter</a></footer>
@@ -88,12 +89,14 @@ const ImageOfTheDay = (apod) => {
     // check if the photo of the day is actually type video!
     if (apod.media_type === "video") {
         return (`
+            <h3>Picture of the Day</h3>
             <p>See today's featured video <a href="${apod.url}">here</a></p>
             <p>${apod.title}</p>
             <p>${apod.explanation}</p>
         `)
     } else {
         return (`
+            <h3>Picture of the Day</h3>
             <div class="apod">
             <img src="${apod.image.url}"/>
             <p>${apod.image.explanation}</p>
@@ -101,6 +104,17 @@ const ImageOfTheDay = (apod) => {
         `)
     }
 }
+
+const RoverView = (rover) => {
+  console.log(rover);
+  return `
+    <h3>${rover}</h3>
+  `
+}
+
+// ------------------------------------------------------  HELPERS
+
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.toLowerCase().slice(1)
 
 // ------------------------------------------------------  API CALLS
 
