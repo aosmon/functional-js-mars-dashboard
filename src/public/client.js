@@ -21,18 +21,17 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod, currentView, selectedRover } = state
+    let { rovers, currentView } = state
 
     return `
         <header>
-          <h1>Mars Dashboard</h1>
-          ${Dropdown(rovers,currentView)}
+            <h1>Mars Dashboard</h1>
+            ${Dropdown(rovers,currentView)}
         </header>
         <main>
             ${Greeting(store.user.name)}
             <section>
-                ${currentView==='apod' && ImageOfTheDay(apod)}
-                ${rovers.includes(capitalize(currentView)) && RoverView(currentView, selectedRover)}
+                ${CurrentView(state)}
             </section>
         </main>
         <footer><a href='https://www.freepik.com/photos/background'>Background photo by kjpargeter</a></footer>
@@ -57,6 +56,15 @@ const Greeting = (name) => {
     return `
         <h1>Hello!</h1>
     `
+}
+const CurrentView = (state) => {
+  let { rovers, apod, currentView, selectedRover } = state
+  
+  if(rovers.includes(capitalize(currentView))) {
+    return RoverView(currentView, selectedRover)
+  }
+
+  return ImageOfTheDay(apod)
 }
 
 const Dropdown = (rovers, currentView) => {
