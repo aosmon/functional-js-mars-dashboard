@@ -33,4 +33,16 @@ app.get('/rover-mission', async (req, res) => {
   }
 })
 
+app.get('/rover-photos', async (req, res) => {
+  const rover=req.query.rover;
+  const earth_date = req.query.earth_date;
+  try {
+      const data = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${earth_date}&api_key=${process.env.API_KEY}`)
+          .then(res => res.json())
+      res.send(data.photos)
+  } catch (err) {
+      console.log('error:', err);
+  }
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

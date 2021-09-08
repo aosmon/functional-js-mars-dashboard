@@ -57,9 +57,10 @@ const Greeting = (name) => {
         <h1>Hello!</h1>
     `
 }
+
 const CurrentView = (state) => {
   let { rovers, apod, currentView, selectedRover } = state
-  
+
   if(rovers.includes(capitalize(currentView))) {
     return RoverView(currentView, selectedRover)
   }
@@ -118,7 +119,12 @@ const RoverView = (rover, selectedRover) => {
     getRoverData(rover)
   }
 
-  return `
+  if(selectedRover.manifest && !selectedRover.photos) {
+    getRoverPhotos(rover, selectedRover.manifest.max_date)
+  }
+
+  if(selectedRover.manifest) {
+    return `
     <div class="rover-view">
       <h3>${capitalize(rover)}</h3>
       <ul>
@@ -129,8 +135,19 @@ const RoverView = (rover, selectedRover) => {
         <li>Latest Earth date: ${selectedRover.manifest.max_date}</li>
         <li>Total Photos Taken: ${selectedRover.manifest.total_photos}</li>
       </ul>
+      <div class="rover-photos">
+      
+      </div>
     </div>
     `
+  }
+
+  return `
+  <div class="rover-view">
+  <h3>${capitalize(rover)}</h3>
+    <p>Unable to retrieve rover data.</p>
+  </div>
+  `
 }
 
 // ------------------------------------------------------  HELPERS
@@ -153,6 +170,14 @@ const getRoverData = (rover) => {
       .then(res => res.json())
       .then(data => {
         updateStore(store, { selectedRover: { manifest: data }})
-        console.log(store)
+      })
+}
+
+const getRoverPhotos = (rover, earth_date) => {
+  fetch(`http://localhost:3000/rover-photos?rover=${rover}&earth_date=${earth_date}`)
+      .then(res => res.json())
+      .then(data => {
+        updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, photos: data } })
+        console.log(store.selectedRover)
       })
 }
