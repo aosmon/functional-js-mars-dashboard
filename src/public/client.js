@@ -29,7 +29,6 @@ const App = (state) => {
             ${Dropdown(rovers,currentView)}
         </header>
         <main>
-            ${Greeting(store.user.name)}
             <section>
                 ${CurrentView(state)}
             </section>
@@ -44,19 +43,6 @@ window.addEventListener('load', () => {
 })
 
 // ------------------------------------------------------  COMPONENTS
-
-// Pure function that renders conditional information
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome, ${name}!</h1>
-        `
-    }
-
-    return `
-        <h1>Hello!</h1>
-    `
-}
 
 const CurrentView = (state) => {
   let { rovers, apod, currentView, selectedRover } = state
@@ -126,13 +112,11 @@ const RoverView = (rover, selectedRover) => {
   if(selectedRover.manifest) {
     return `
     <div class="rover-view">
-      <h3>${capitalize(rover)}</h3>
       <ul>
         <li>Launch Date: ${selectedRover.manifest.launch_date}</li>
         <li>Landing Data: ${selectedRover.manifest.landing_date}</li>
         <li>Mission status: ${selectedRover.manifest.status}</li>
-        <li>Latest Martian sol: ${selectedRover.manifest.max_sol}</li>
-        <li>Latest Earth date: ${selectedRover.manifest.max_date}</li>
+        <li>Date the most recent photos were taken: ${selectedRover.manifest.max_date}</li>
         <li>Total Photos Taken: ${selectedRover.manifest.total_photos}</li>
       </ul>
       <div class="rover-photos">
