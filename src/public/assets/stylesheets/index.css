@@ -51,12 +51,27 @@ p {
   color: #fff;
 }
 
+.rover-photos ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+.rover-photos li {
+  width: 50%;
+}
+
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   header {
     height: 400px;
     background-position-x: 80%;
     background-position-y: 70%;
+  }
+
+  .rover-photos li {
+    width: 25%;
   }
 }
 
@@ -83,6 +98,10 @@ p {
 
   .apod p {
     width: 30%;
+  }
+
+  .rover-photos li {
+    width: 20%;
   }
 }
 

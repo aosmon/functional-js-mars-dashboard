@@ -119,9 +119,7 @@ const RoverView = (rover, selectedRover) => {
         <li>Date the most recent photos were taken: ${selectedRover.manifest.max_date}</li>
         <li>Total Photos Taken: ${selectedRover.manifest.total_photos}</li>
       </ul>
-      <div class="rover-photos">
-      
-      </div>
+      ${selectedRover.photos && RoverPhotoGallery(selectedRover.photos)}
     </div>
     `
   }
@@ -132,6 +130,16 @@ const RoverView = (rover, selectedRover) => {
     <p>Unable to retrieve rover data.</p>
   </div>
   `
+}
+
+const RoverPhotoGallery = (photos) => {
+  return  `
+  <div class="rover-photos">
+    <ul>
+    ${photos.map(photo => `<li><img src="${photo.img_src}"></li>`).join('')}
+    </ul>
+  </div>  
+`
 }
 
 // ------------------------------------------------------  HELPERS
