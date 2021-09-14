@@ -12,17 +12,21 @@ body {
 
 header {
   color: #fff;
-  height: 300px;
+  height: 68px;
   margin: 0;
-  padding: 20px 40px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+  background-position-y: 50%;
+}
+
+main {
   background-image: url(../images/3d-abstract-space-background-with-wireframe-landscape.jpg);
   background-repeat: no-repeat;
   background-size: 100%;
   background-color: #000;
-  text-align: center;
-}
-
-main {
+  height: auto;
   flex: 1;
   padding: 20px;
   background-color: #000;
@@ -51,6 +55,67 @@ p {
   color: #fff;
 }
 
+/* --------  dropdown  --------- */
+
+.view-select select {
+  background-color: DodgerBlue;
+  width: 100%;
+  color: #fff;
+  border: 1px solid var(--select-border);
+  padding: 0.5em 0.5em;
+  margin: 20px 0;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1.1;
+}
+
+.view-select::after {
+  color: #fff;
+  content: "";
+  width: 0.8em;
+  height: 0.5em;
+  background-color: var(--select-arrow);
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+}
+
+.view-select option {
+  background-color: DodgerBlue;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+/* -------------------*/
+
+.apod {
+  text-align: center;
+}
+
+.apod p {
+  margin: 0 0 20px 0;
+}
+
+.rover-manifest {
+  padding: 0 10px 0 0;
+  font-size: 0.9em;
+}
+
+.rover-manifest ul li {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.rover-manifest ul li span {
+  width: 100%;
+  border-bottom: 1px solid dodgerblue;
+  padding: 5px 0;
+}
+
+.rover-manifest ul li span:last-of-type {
+  text-align: right;
+}
+
 .rover-photos ul {
   display: flex;
   flex-direction: row;
@@ -64,24 +129,35 @@ p {
 
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
-  header {
-    height: 400px;
-    background-position-x: 80%;
-    background-position-y: 70%;
-  }
 
   .rover-photos li {
     width: 25%;
   }
 }
 
+@media (min-width: 1024px) {
+
+  .rover-view {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .rover-manifest {
+    width: 20%;
+  }
+
+  .rover-photo-gallery {
+    width: 80%;
+  }
+}
+
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
-  header {
-    height: 600px;
-    background-position-x: 60%;
-    background-position-y: 70%;
+  main {
+    min-height: calc(100vh - 68px - 50px);
+    background-position: 50% 0%;
   }
 
   .apod {
@@ -92,16 +168,19 @@ p {
   }
 
   .apod img {
-    width: 60%;
+    max-width: 60%;
+    max-height: 65vh;
     height: auto;
+    margin: 20px;
   }
 
   .apod p {
     width: 30%;
+    margin: 20px;
   }
 
   .rover-photos li {
-    width: 20%;
+    width: 15%;
   }
 }
 

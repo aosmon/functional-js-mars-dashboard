@@ -26,10 +26,10 @@ const App = (state) => {
     return `
         <header>
             <h1>Mars Dashboard</h1>
-            ${Dropdown(rovers,currentView)}
         </header>
         <main>
-            <section>
+        ${ViewDropdown(rovers,currentView)}
+        <section>
                 ${CurrentView(state)}
             </section>
         </main>
@@ -54,15 +54,17 @@ const CurrentView = (state) => {
   return ImageOfTheDay(apod)
 }
 
-const Dropdown = (rovers, currentView) => {
+const ViewDropdown = (rovers, currentView) => {
   return `
-    <select name="views" id="views" onchange="updateCurrentView(this.value)">
-      <option value="apod">Picture of the Day</option>
-      ${rovers.map(rover => `<option 
-                                value="${rover.toLowerCase()}" 
-                                ${currentView===rover.toLowerCase() ? 'selected' : ''}
-                                >${rover}</option>`)}
-    </select>
+    <div class="view-select">
+      <select onchange="updateCurrentView(this.value)">
+        <option value="apod">Picture of the Day</option>
+        ${rovers.map(rover => `<option 
+                                  value="${rover.toLowerCase()}" 
+                                  ${currentView===rover.toLowerCase() ? 'selected' : ''}
+                                  >${rover}</option>`)}
+      </select>
+    </div>
   `
 }
 
@@ -84,17 +86,15 @@ const ImageOfTheDay = (apod) => {
     // check if the photo of the day is actually type video!
     if (apod.media_type === "video") {
         return (`
-            <h3>Picture of the Day</h3>
             <p>See today's featured video <a href="${apod.url}">here</a></p>
             <p>${apod.title}</p>
             <p>${apod.explanation}</p>
         `)
     } else {
         return (`
-            <h3>Picture of the Day</h3>
             <div class="apod">
-            <img src="${apod.image.url}"/>
             <p>${apod.image.explanation}</p>
+            <img src="${apod.image.url}"/>
             </div>
         `)
     }
@@ -108,13 +108,15 @@ const RoverView = (rover, selectedRover) => {
   if(selectedRover.manifest) {
     return `
     <div class="rover-view">
-      <ul>
-        <li>Launch Date: ${selectedRover.manifest.launch_date}</li>
-        <li>Landing Data: ${selectedRover.manifest.landing_date}</li>
-        <li>Mission status: ${selectedRover.manifest.status}</li>
-        <li>Date the most recent photos were taken: ${selectedRover.manifest.max_date}</li>
-        <li>Total Photos Taken: ${selectedRover.manifest.total_photos}</li>
-      </ul>
+      <div class="rover-manifest">
+        <ul>
+          <li><span>Launch Date</span><span>${selectedRover.manifest.launch_date}</span></li>
+          <li><span>Landing Data</span><span>${selectedRover.manifest.landing_date}</span></li>
+          <li><span>Mission status</span><span>${selectedRover.manifest.status}</span></li>
+          <li><span>Latest photos taken</span><span>${selectedRover.manifest.max_date}</span></li>
+          <li><span>Total Photos Taken</span><span>${selectedRover.manifest.total_photos}</span></li>
+        </ul>
+      </div>
       ${selectedRover.manifest.photos && RoverPhotoGallery(selectedRover)}
     </div>
     `
