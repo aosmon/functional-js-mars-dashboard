@@ -106,12 +106,15 @@ const ImageOfTheDay = (apod) => {
             <p>${apod.explanation}</p>
         `)
     } else {
-        return (`
+        if(apod.image) {
+          return `
             <div class="apod">
             <p>${apod.image.explanation}</p>
             <img src="${apod.image.url}"/>
             </div>
-        `)
+          `
+        }
+        return `Loading Picture of the Day...`
     }
 }
 
