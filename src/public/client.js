@@ -1,7 +1,6 @@
 let store = {
-    user: { name: "Student" },
     apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
     currentView: 'apod',
     selectedRover: {
       manifest: {},
@@ -59,14 +58,16 @@ const CurrentView = (state) => {
 }
 
 const ViewDropdown = (rovers, currentView) => {
+  const options = rovers.map(rover => `<option 
+                                        value="${rover.toLowerCase()}" 
+                                        ${currentView===rover.toLowerCase() ? 'selected' : ''}
+                                        >${rover}
+                                        </option>`).join();
   return `
     <div class="view-select">
       <select onchange="updateCurrentView(this.value)">
         <option value="apod">Picture of the Day</option>
-        ${rovers.map(rover => `<option 
-                                  value="${rover.toLowerCase()}" 
-                                  ${currentView===rover.toLowerCase() ? 'selected' : ''}
-                                  >${rover}</option>`)}
+        ${options}
       </select>
     </div>
   `
