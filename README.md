@@ -24,8 +24,6 @@ A Mars rover dashboard that consumes the NASA API. Dashboard that allows the use
 
 5. Run `yarn start` in your terminal and go to `http:localhost:3000`.
 
-6. Remember to commit frequently, use branches, and leave good commit messages! You'll thank yourself later.
-
 ### Project Requirements
 
 To complete this project, UI must show the following:
