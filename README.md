@@ -1,18 +1,16 @@
 # Functional Programming with Javascript 
 
-<img width="375" alt="NASAapi01" src="https://user-images.githubusercontent.com/26148396/133545114-5def9b66-d2cf-4cdc-a74d-3b790cc21669.png">
-<img width="750" alt="NASAapp02" src="https://user-images.githubusercontent.com/26148396/133545117-4419b1cd-c252-4c27-a9bc-3514efb1a1f0.png">
-<img width="750" alt="NASAapp03" src="https://user-images.githubusercontent.com/26148396/133545120-ec04ec50-7f0a-473b-b434-d75a8230ef41.png">
-
 ### Project Overview
 
 A Mars rover dashboard that consumes the NASA API. Dashboard that allows the user to select which rover's information they want to view. Once they have selected a rover, they will be able to see the most recent images taken by that rover, as well as important information about the rover and its mission. Goal of this project is to create an app that will make use of all the functional concepts and practices learned in this course, and to become comfortable using pure functions and iterating over, reshaping, and accessing information from complex API responses. 
 
+<img width="375" alt="NASAapi01" src="https://user-images.githubusercontent.com/26148396/133545114-5def9b66-d2cf-4cdc-a74d-3b790cc21669.png">
+<img width="750" alt="NASAapp02" src="https://user-images.githubusercontent.com/26148396/133545117-4419b1cd-c252-4c27-a9bc-3514efb1a1f0.png">
+<img width="750" alt="NASAapp03" src="https://user-images.githubusercontent.com/26148396/133545120-ec04ec50-7f0a-473b-b434-d75a8230ef41.png">
+
 ### How to run
 
 1. Clone repo and install the dependencies
-
-```git clone --single-branch --branch starter <repo-name>```
 
  - To install depencies run:
 
@@ -58,7 +56,7 @@ To complete this project, backend code must:
 
 Design
 
-- Create the visual design of this UI 
+- [ ] Create the visual design of this UI 
 
 
 
