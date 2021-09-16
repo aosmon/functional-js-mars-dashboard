@@ -36,7 +36,9 @@ const App = (state) => {
                 ${CurrentView(state)}
             </section>
         </main>
-        <footer><a href='https://www.freepik.com/photos/background'>Background photo by kjpargeter</a></footer>
+        <footer>
+        <a href='https://www.freepik.com/photos/background'>Background photo by kjpargeter</a> | 
+        All data provided by <a href='https://api.nasa.gov/'>NASA Open API</a></footer>
     `
 }
 

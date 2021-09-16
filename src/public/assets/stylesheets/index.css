@@ -40,10 +40,14 @@ footer {
   background-color: #000;
 }
 
+footer {
+  color: #fff;
+  font-size: 0.7em;
+  margin: 0;
+}
+
 footer a {
   color: #fff;
-  font-size: 0.8em;
-  margin: 0;
 }
 
 h1,
