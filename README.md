@@ -52,7 +52,7 @@ To complete this project, backend code must:
 - [ ] Be built with Node/Express
 - [ ] Make successful calls to the NASA API
 - [ ] Use pure functions to do any logic necessary
-- [ ] Hide any sensetive information from public view (In other words, use your dotenv file)
+- [ ] Hide any sensetive information from public view (dotenv file)
 
 Design
 
