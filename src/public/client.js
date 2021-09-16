@@ -78,7 +78,7 @@ const updateCurrentView = (option) => {
 }
 
 const updateRoverSelectedDate = (option) => {
-  updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, selectedDate: option, photos: [] }})
+  updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, selectedDate: option, photos: {...store.selectedRover.photos} }})
   if(store.selectedRover.selectedDate && store.selectedRover.photos && !store.selectedRover.photos[option]){
     getRoverPhotos(store.selectedRover.manifest.name.toLowerCase(), store.selectedRover.selectedDate);
   }
