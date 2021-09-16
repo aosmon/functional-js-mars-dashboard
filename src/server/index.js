@@ -6,6 +6,7 @@ const path = require('path')
 
 const app = express()
 const port = 3000
+const NASA_API = 'https://api.nasa.gov'
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -14,7 +15,7 @@ app.use('/', express.static(path.join(__dirname, '../public')))
 
 app.get('/apod', async (req, res) => {
     try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
+        let image = await fetch(`${NASA_API}/planetary/apod?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send({ image })
     } catch (err) {
@@ -25,7 +26,7 @@ app.get('/apod', async (req, res) => {
 app.get('/rover-mission', async (req, res) => {
   const rover=req.query.rover;
   try {
-      const data = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${rover}?api_key=${process.env.API_KEY}`)
+      const data = await fetch(`${NASA_API}/mars-photos/api/v1/manifests/${rover}?api_key=${process.env.API_KEY}`)
           .then(res => res.json())
       res.send(data.photo_manifest)
   } catch (err) {
@@ -37,7 +38,7 @@ app.get('/rover-photos', async (req, res) => {
   const rover=req.query.rover;
   const earth_date = req.query.earth_date;
   try {
-      const data = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${earth_date}&api_key=${process.env.API_KEY}`)
+      const data = await fetch(`${NASA_API}/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${earth_date}&api_key=${process.env.API_KEY}`)
           .then(res => res.json())
       res.send(data.photos)
   } catch (err) {
