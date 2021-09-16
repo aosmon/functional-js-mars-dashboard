@@ -28,7 +28,7 @@ const App = (state) => {
             <h1>Mars Dashboard</h1>
         </header>
         <main>
-        ${ViewDropdown(rovers,currentView)}
+        ${ViewSelect(rovers,currentView)}
         <section>
                 ${CurrentView(state)}
             </section>
@@ -56,7 +56,7 @@ const CurrentView = (state) => {
   return ImageOfTheDay(apod)
 }
 
-const ViewDropdown = (rovers, currentView) => {
+const ViewSelect = (rovers, currentView) => {
   const options = rovers.map(rover => `<option 
                                         value="${rover.toLowerCase()}" 
                                         ${currentView===rover.toLowerCase() ? 'selected' : ''}
@@ -127,16 +127,10 @@ const RoverView = (rover, selectedRover) => {
     return `
     <div class="rover-view">
       <div class="rover-manifest">
-        <ul>
-          <li><span>Launch Date</span><span>${selectedRover.manifest.launch_date}</span></li>
-          <li><span>Landing Data</span><span>${selectedRover.manifest.landing_date}</span></li>
-          <li><span>Mission status</span><span>${selectedRover.manifest.status}</span></li>
-          <li><span>Latest photos taken</span><span>${selectedRover.manifest.max_date}</span></li>
-          <li><span>Total Photos Taken</span><span>${selectedRover.manifest.total_photos}</span></li>
-        </ul>
-        ${selectedRover.manifest.photos && RoverDateSelect(selectedRover)}
+        ${RoverManifest(selectedRover)}
+        ${RoverDateSelect(selectedRover)}
         </div>
-      ${selectedRover.manifest.photos && RoverPhotoGallery(selectedRover)}
+      ${RoverPhotoGallery(selectedRover)}
     </div>
     `
   }
@@ -149,8 +143,24 @@ const RoverView = (rover, selectedRover) => {
   `
 }
 
+const RoverManifest = (rover) => {
+  if(rover.manifest) {
+    return `
+      <ul>
+        <li><span>Launch Date</span><span>${rover.manifest.launch_date}</span></li>
+        <li><span>Landing Data</span><span>${rover.manifest.landing_date}</span></li>
+        <li><span>Mission status</span><span>${rover.manifest.status}</span></li>
+        <li><span>Latest photos taken</span><span>${rover.manifest.max_date}</span></li>
+        <li><span>Total Photos Taken</span><span>${rover.manifest.total_photos}</span></li>
+      </ul>
+    `
+  }
+
+}
+
 const RoverDateSelect = (rover) => {
-  return `
+  if(rover.manifest.photos) {
+    return `
     <div class="view-select">
       <select onchange="updateRoverSelectedDate(this.value)">
       ${rover.manifest.photos.map(photoBlock => {
@@ -163,6 +173,7 @@ const RoverDateSelect = (rover) => {
     </select>
     </div>
   `
+  }
 }
 
 const RoverPhotoGallery = (rover) => {
@@ -170,9 +181,7 @@ const RoverPhotoGallery = (rover) => {
     return  `
     <div class="rover-photo-gallery">
       <div class="rover-photos">
-        <ul>
-        ${rover.photos[rover.selectedDate].map(photo => `<li><img src="${photo.img_src}"></li>`).join('')}
-        </ul>
+        ${UnorderedList(rover.photos[rover.selectedDate], RoverPhotoImage)}
       </div>
     </div>
   `    
@@ -180,9 +189,19 @@ const RoverPhotoGallery = (rover) => {
   return `Loading photos...`
 }
 
+const RoverPhotoImage = (image) => `<img src="${image.img_src}" title="${image.rover.name + ': ' + image.earth_date}">`
+
 // ------------------------------------------------------  HELPERS
 
-const capitalize = (str) => str.charAt(0).toUpperCase() + str.toLowerCase().slice(1)
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+
+const UnorderedList = (array, cb) => {
+  return `
+    <ul>
+      ${array.map(item =>  `<li>${cb(item)}</li>`).join('')}
+    </ul>
+  `
+};
 
 // ------------------------------------------------------  API CALLS
 
@@ -213,6 +232,7 @@ const getRoverData = (rover) => {
       })
       .then(data => {
         updateRoverManifest(data)
+        console.log(data);
         return data.photos[data.photos.length-1].earth_date
       })
       .then(data => {
