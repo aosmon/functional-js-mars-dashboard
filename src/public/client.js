@@ -9,7 +9,6 @@ let store = {
     }
 }
 
-// add our markup to the page
 const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
@@ -21,8 +20,6 @@ const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
-
-// create content
 const App = (state) => {
     let { rovers, currentView } = state
 
@@ -181,19 +178,6 @@ const RoverPhotoGallery = (rover) => {
   `    
   }
   return `Loading photos...`
-}
-
-const RoverPhotosByEarthDay = (photos) => {
-  if(photos) {
-    return  `
-    <div class="rover-photos">
-      <ul>
-      ${photos.map(photo => `<li><img src="${photo.img_src}"></li>`).join('')}
-      </ul>
-    </div>
-  `
-  }
-  return `Unable to load photos`
 }
 
 // ------------------------------------------------------  HELPERS
