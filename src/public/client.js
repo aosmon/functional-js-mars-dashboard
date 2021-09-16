@@ -3,8 +3,11 @@ let store = {
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     currentView: 'apod',
-    selectedRover: {},
-    selectedDate: ''
+    selectedRover: {
+      manifest: {},
+      photos: [],
+      selectedDate: ''
+    }
 }
 
 // add our markup to the page
@@ -73,9 +76,15 @@ const updateCurrentView = (option) => {
   updateStore(store, { currentView: option })
 }
 
-const updateRoverDate = (option) => {
-  updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, selectedDate: option }})
-  getRoverPhotos(store.selectedRover.manifest.name.toLowerCase(), store.selectedRover.selectedDate);
+const updateRoverSelectedDate = (option) => {
+  updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, selectedDate: option, photos: [] }})
+  if(store.selectedRover.selectedDate && store.selectedRover.photos && !store.selectedRover.photos[option]){
+    getRoverPhotos(store.selectedRover.manifest.name.toLowerCase(), store.selectedRover.selectedDate);
+  }
+}
+
+const updateRoverManifest = (manifest) => {
+  updateStore(store, { selectedRover: { manifest }})
 }
 
 // Example of a pure function that renders infomation requested from the backend
@@ -140,7 +149,7 @@ const RoverView = (rover, selectedRover) => {
 const RoverDateSelect = (rover) => {
   return `
     <div class="view-select">
-      <select onchange="updateRoverDate(this.value)">
+      <select onchange="updateRoverSelectedDate(this.value)">
       ${rover.manifest.photos.map(photoBlock => {
         const earth_date = photoBlock.earth_date;
         return `<option 
@@ -154,7 +163,7 @@ const RoverDateSelect = (rover) => {
 }
 
 const RoverPhotoGallery = (rover) => {
-  if(rover.photos && rover.selectedDate) {
+  if(rover.photos && rover.selectedDate && rover.photos[rover.selectedDate]) {
     return  `
     <div class="rover-photo-gallery">
       <div class="rover-photos">
@@ -200,12 +209,11 @@ const getRoverData = (rover) => {
   fetch(`http://localhost:3000/rover-mission?rover=${rover}`)
       .then(res => res.json())
       .then(data => {
-        updateStore(store, { selectedRover: { manifest: data }})
-        return data.photos[data.photos.length-1].earth_date;
+        updateRoverManifest(data)
+        return data.photos[data.photos.length-1].earth_date
       })
       .then(data => {
-        updateRoverDate(data)
-        console.log(store.selectedRover)
+        updateRoverSelectedDate(data)
       })
 }
 
@@ -214,6 +222,5 @@ const getRoverPhotos = (rover, earth_date) => {
       .then(res => res.json())
       .then(data => {
         updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, selectedDate: store.selectedRover.selectedDate, photos: { ...store.selectedRover.photos, [earth_date]: data } } })
-        console.log(store.selectedRover.photos[earth_date])
       })
 }
