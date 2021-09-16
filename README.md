@@ -1,6 +1,8 @@
 # Functional Programming with Javascript 
 
-## Student Instructions
+<img width="375" alt="NASAapi01" src="https://user-images.githubusercontent.com/26148396/133545114-5def9b66-d2cf-4cdc-a74d-3b790cc21669.png">
+<img width="750" alt="NASAapp02" src="https://user-images.githubusercontent.com/26148396/133545117-4419b1cd-c252-4c27-a9bc-3514efb1a1f0.png">
+<img width="750" alt="NASAapp03" src="https://user-images.githubusercontent.com/26148396/133545120-ec04ec50-7f0a-473b-b434-d75a8230ef41.png">
 
 ### Big Picture
 
