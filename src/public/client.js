@@ -191,13 +191,26 @@ const getImageOfTheDay = (state) => {
     let { apod } = state
 
     fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong');
+        }
+      })
+      .then(apod => updateStore(store, { apod }))
+      .catch(error => console.log(error));
 }
 
 const getRoverData = (rover) => {
   fetch(`http://localhost:3000/rover-mission?rover=${rover}`)
-      .then(res => res.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong');
+        }
+      })
       .then(data => {
         updateRoverManifest(data)
         return data.photos[data.photos.length-1].earth_date
@@ -205,12 +218,20 @@ const getRoverData = (rover) => {
       .then(data => {
         updateRoverSelectedDate(data)
       })
+      .catch(error => console.log(error));
 }
 
 const getRoverPhotos = (rover, earth_date) => {
   fetch(`http://localhost:3000/rover-photos?rover=${rover}&earth_date=${earth_date}`)
-      .then(res => res.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong');
+        }
+      })
       .then(data => {
         updateStore(store, { selectedRover: {manifest: store.selectedRover.manifest, selectedDate: store.selectedRover.selectedDate, photos: { ...store.selectedRover.photos, [earth_date]: data } } })
       })
+      .catch(error => console.log(error));
 }
