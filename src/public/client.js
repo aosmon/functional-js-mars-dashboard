@@ -48,10 +48,10 @@ const CurrentView = (state) => {
   const { rovers, apod, currentView, selectedRover } = state
 
   if(rovers.includes(capitalize(currentView))) {
-    return Section(RoverView(currentView, selectedRover), getRoverData(currentView))
+    return Section(RoverView(selectedRover), getRoverData(currentView))
   }
 
-  return Section(ImageOfTheDay(apod), getImageOfTheDay(state))
+  return Section(ImageOfTheDay(apod), getImageOfTheDay(apod))
 }
 
 const ViewSelect = (rovers, currentView) => {
@@ -107,15 +107,15 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const RoverView = (rover, selectedRover) => {
-  if(selectedRover.manifest) {
+const RoverView = (rover) => {
+  if(rover.manifest) {
     return `
     <div class="rover-view">
       <div class="rover-manifest">
-        ${RoverManifest(selectedRover)}
-        ${RoverDateSelect(selectedRover)}
+        ${RoverManifest(rover)}
+        ${RoverDateSelect(rover)}
         </div>
-      ${RoverPhotoGallery(selectedRover)}
+      ${RoverPhotoGallery(rover)}
     </div>
     `
   }
@@ -128,7 +128,6 @@ const RoverView = (rover, selectedRover) => {
 }
 
 const RoverManifest = (rover) => {
-  if(rover.manifest) {
     return `
       <ul>
         <li><span>Launch Date</span><span>${rover.manifest.launch_date}</span></li>
@@ -138,7 +137,6 @@ const RoverManifest = (rover) => {
         <li><span>Total Photos Taken</span><span>${rover.manifest.total_photos}</span></li>
       </ul>
     `
-  }
 }
 
 const RoverDateSelect = (rover) => {
@@ -199,10 +197,8 @@ const UnorderedList = (array, cb) => {
 // ------------------------------------------------------  API CALLS
 
 // Get image of the day
-const getImageOfTheDay = (state) => {
+const getImageOfTheDay = (apod) => {
 
-  let { apod } = state
-  
   // If image does not already exist, or it is not from today -- request it again
     const today = new Date()
     const photodate = new Date(apod.date)
