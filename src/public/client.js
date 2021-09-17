@@ -21,7 +21,7 @@ const render = async (root, state) => {
 }
 
 const App = (state) => {
-    let { rovers, currentView } = state
+  const { rovers, apod, currentView, selectedRover } = state
 
     return `
         <header>
@@ -29,9 +29,7 @@ const App = (state) => {
         </header>
         <main>
         ${ViewSelect(rovers,currentView)}
-        <section>
-                ${CurrentView(state)}
-            </section>
+        ${CurrentView(state)}        
         </main>
         <footer>
         <a href='https://www.freepik.com/photos/background'>Background photo by kjpargeter</a> | 
@@ -47,13 +45,13 @@ window.addEventListener('load', () => {
 // ------------------------------------------------------  COMPONENTS
 
 const CurrentView = (state) => {
-  let { rovers, apod, currentView, selectedRover } = state
+  const { rovers, apod, currentView, selectedRover } = state
 
   if(rovers.includes(capitalize(currentView))) {
-    return RoverView(currentView, selectedRover)
+    return Section(RoverView(currentView, selectedRover), getRoverData(currentView))
   }
 
-  return ImageOfTheDay(apod)
+  return Section(ImageOfTheDay(apod), getImageOfTheDay(state))
 }
 
 const ViewSelect = (rovers, currentView) => {
@@ -89,15 +87,6 @@ const updateRoverManifest = (manifest) => {
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
-
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
-
     // check if the photo of the day is actually type video!
     if (apod.media_type === "video") {
         return (`
@@ -119,10 +108,6 @@ const ImageOfTheDay = (apod) => {
 }
 
 const RoverView = (rover, selectedRover) => {
-  if(!selectedRover.manifest || selectedRover.manifest.name!=capitalize(rover)) {
-    getRoverData(rover)
-  }
-
   if(selectedRover.manifest) {
     return `
     <div class="rover-view">
@@ -137,7 +122,6 @@ const RoverView = (rover, selectedRover) => {
 
   return `
   <div class="rover-view">
-  <h3>${capitalize(rover)}</h3>
     <p>Loading rover data...</p>
   </div>
   `
@@ -155,7 +139,6 @@ const RoverManifest = (rover) => {
       </ul>
     `
   }
-
 }
 
 const RoverDateSelect = (rover) => {
@@ -195,6 +178,16 @@ const RoverPhotoImage = (image) => `<img src="${image.img_src}" title="${image.r
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 
+const Section = (component, getDataFn) => {
+  getDataFn
+
+  return `
+    <section>
+    ${component}
+    </section>
+  `
+}
+
 const UnorderedList = (array, cb) => {
   return `
     <ul>
@@ -207,9 +200,15 @@ const UnorderedList = (array, cb) => {
 
 // Get image of the day
 const getImageOfTheDay = (state) => {
-    let { apod } = state
 
-    fetch(`http://localhost:3000/apod`)
+  let { apod } = state
+  
+  // If image does not already exist, or it is not from today -- request it again
+    const today = new Date()
+    const photodate = new Date(apod.date)
+
+    if (!apod || apod.date === today.getDate() ) {
+      fetch(`http://localhost:3000/apod`)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -218,27 +217,32 @@ const getImageOfTheDay = (state) => {
         }
       })
       .then(apod => updateStore(store, { apod }))
-      .catch(error => console.log(error));
+      .catch(error => console.log(error));        
+    }
 }
 
 const getRoverData = (rover) => {
-  fetch(`http://localhost:3000/rover-mission?rover=${rover}`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Something went wrong');
-        }
-      })
-      .then(data => {
-        updateRoverManifest(data)
-        console.log(data);
-        return data.photos[data.photos.length-1].earth_date
-      })
-      .then(data => {
-        updateRoverSelectedDate(data)
-      })
-      .catch(error => console.log(error));
+
+  const { selectedRover } = store
+
+  if(!selectedRover.manifest || selectedRover.manifest.name!=capitalize(rover)) {
+    fetch(`http://localhost:3000/rover-mission?rover=${rover}`)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Something went wrong');
+      }
+    })
+    .then(data => {
+      updateRoverManifest(data)
+      return data.photos[data.photos.length-1].earth_date
+    })
+    .then(data => {
+      updateRoverSelectedDate(data)
+    })
+    .catch(error => console.log(error));
+  }
 }
 
 const getRoverPhotos = (rover, earth_date) => {
